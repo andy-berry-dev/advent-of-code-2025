@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "ts-node": "ts-node",
     "test": "vitest ."
   },
   "devDependencies": {
