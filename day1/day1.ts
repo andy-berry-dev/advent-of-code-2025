@@ -11,18 +11,45 @@ export const parseInput = (input: string): number => {
   }
 };
 
-export const applyRotations = (inputs: string[], start = 50): number[] =>
-  inputs.reduce(
-    (acc, curr) => {
-      const newPosition = acc.slice(-1)[0] + parseInput(curr);
-      const newPositionWithWraparound =
-        newPosition % 100 < 0 ? 100 + (newPosition % 100) : newPosition % 100;
-      return [...acc, newPositionWithWraparound];
-    },
-    [start]
+export const calculateNewPosition = (
+  currentPosition: number,
+  rotation: string
+): [number, number] => {
+  const rotationsToApply = parseInput(rotation);
+  const rotations = Array.from({ length: Math.abs(rotationsToApply) }, (_, i) =>
+    1 * rotationsToApply > 0 ? 1 : -1
   );
 
-export const calculateCode = (rotations: string[], start = 50): number => {
-  const positions = applyRotations(rotations, start);
-  return positions.reduce((count, pos) => (pos === 0 ? count + 1 : count), 0);
+  return rotations.reduce(
+    ([position, wraparounds], rotation) => {
+      const newPosition = position + rotation;
+      const newPositionWithWraparound =
+        newPosition < 0 ? newPosition + 100 : newPosition % 100;
+      return [
+        newPositionWithWraparound,
+        wraparounds + (newPositionWithWraparound == 0 ? 1 : 0),
+      ];
+    },
+    [currentPosition, 0]
+  );
 };
+
+export const applyRotations = (
+  inputs: string[],
+  start = 50
+): [number[], number] =>
+  inputs.reduce<[number[], number]>(
+    (acc, curr) => {
+      const [currentPositions, currentWorkarounds] = acc;
+      const currentPosition = currentPositions.slice(-1)[0];
+      const [newPosition, wraparounds] = calculateNewPosition(
+        currentPosition,
+        curr
+      );
+      return [
+        [...currentPositions, newPosition],
+        currentWorkarounds + wraparounds,
+      ];
+    },
+    [[start], 0]
+  );

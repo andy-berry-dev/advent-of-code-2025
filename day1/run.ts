@@ -1,8 +1,8 @@
 import fs from "fs";
 
-import { calculateCode } from "./day1";
+import { applyRotations } from "./day1";
 
 const input = fs.readFileSync("day1/input.txt", "utf-8").trim().split("\n");
 
-const code = calculateCode(input, 50);
+const [, code] = applyRotations(input, 50);
 console.log(`The code is: ${code}`);
