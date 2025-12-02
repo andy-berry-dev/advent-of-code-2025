@@ -10,9 +10,19 @@ export const isInvalidId = (id: string): boolean => {
   if (id.startsWith("0")) {
     return true;
   }
-  const part1 = id.slice(0, id.length / 2);
-  const part2 = id.slice(id.length / 2);
-  return part1 === part2;
+
+  const substrings = Array.from(
+    { length: Math.floor(id.length / 2) },
+    (_, i) => ({
+      appearances: Math.floor(id.length / (i + 1)),
+      substring: id.slice(0, i + 1),
+    })
+  );
+
+  return substrings.some(({ appearances, substring }) => {
+    const repeated = substring.repeat(appearances);
+    return repeated === id;
+  });
 };
 
 export const calculateInvalidIdsFromRange = (range: string): string[] => {
