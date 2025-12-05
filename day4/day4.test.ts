@@ -105,7 +105,6 @@ describe("calculatePaperRollsThatCanBeMoved", () => {
       [true, false, true, true, true, true, false, false, true, false],
       [true, true, false, true, true, true, true, false, true, true],
     ];
-    console.error(calculatePaperRollsThatCanBeMoved(matrix));
     expect(
       // ignore the last row, we include it so that the previous row can be tested properly
       calculatePaperRollsThatCanBeMoved(matrix).slice(0, -1)

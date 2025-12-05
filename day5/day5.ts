@@ -30,3 +30,19 @@ export const parseInput = (
     { ranges: [] as [number, number][], veggieIds: [] as number[] }
   );
 };
+
+export const calculateTotalIds = (ranges: [number, number][]): number => {
+  const sortedRanges = ranges.sort((a, b) => a[0] - b[0]);
+
+  return sortedRanges.reduce(
+    (acc, [start, end]) => {
+      return {
+        count:
+          acc.count +
+          Math.max(0, end - Math.max(start, acc.currentEnd + 1) + 1),
+        currentEnd: Math.max(acc.currentEnd, end),
+      };
+    },
+    { count: 0, currentEnd: -Infinity } as { count: number; currentEnd: number }
+  ).count;
+};

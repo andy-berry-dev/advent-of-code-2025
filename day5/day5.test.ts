@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { calculateFreshVeggies, parseIdRange, parseInput } from "./day5";
+import {
+  calculateFreshVeggies,
+  parseIdRange,
+  parseInput,
+  calculateTotalIds,
+} from "./day5";
 
 describe("parseIdRange", () => {
   test("parses a range string into an array of numbers", () => {
@@ -82,5 +87,56 @@ describe("parseInput", () => {
       ],
       veggieIds: [1, 5, 8, 11, 17, 32],
     });
+  });
+});
+
+describe("calculateTotalIds", () => {
+  test("calculates the total number of fresh veggie IDs for a range of 1-2", () => {
+    expect(calculateTotalIds([[1, 2]])).toEqual(2);
+  });
+
+  test("calculates the total number of fresh veggie IDs for two simple ranges", () => {
+    expect(
+      calculateTotalIds([
+        [1, 2],
+        [4, 5],
+      ])
+    ).toEqual(4);
+  });
+
+  test("calculates the total number of fresh veggie IDs where ranges overlap", () => {
+    expect(
+      calculateTotalIds([
+        [1, 2],
+        [1, 5],
+      ])
+    ).toEqual(5);
+  });
+
+  test("calculates the total number of fresh veggie IDs where multiple ranges overlap", () => {
+    expect(
+      calculateTotalIds([
+        [1, 2],
+        [2, 4],
+        [1, 5],
+      ])
+    ).toEqual(5);
+  });
+
+  test("calculates the total number of fresh veggie IDs from example input", () => {
+    expect(
+      calculateTotalIds([
+        [3, 5],
+        [10, 14],
+        [16, 20],
+        [12, 18],
+      ])
+    ).toEqual(14);
+  });
+
+  test("calculates the total number of fresh veggie IDs for a large range", () => {
+    expect(calculateTotalIds([[74889598306375, 79559523144736]])).toEqual(
+      4669924838362
+    );
   });
 });
