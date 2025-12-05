@@ -1,24 +1,12 @@
 export const findHighestJoltage = (batteryInput: string) => {
   const numbers = batteryInput.split("").map(Number);
 
-  const highestNumbers = numbers.reduce<number[]>(
-    (acc, curr, index) => {
-      const indexToReplace = Math.max(
-        acc.indexOf(Math.min(...acc)),
-        acc.indexOf(Math.min(...acc.reverse()))
-      );
-      if (indexToReplace === -1) return acc;
-
-      if (curr > acc[indexToReplace]) {
-        delete acc[indexToReplace];
-        acc[index] = curr;
-      }
-      return acc;
-    },
-    [0, 0]
+  const firstDigitIndex = numbers.indexOf(Math.max(...numbers.slice(0, -1)));
+  const secondDigitIndex = numbers.indexOf(
+    Math.max(...numbers.slice(firstDigitIndex + 1))
   );
 
-  return parseInt(highestNumbers.join(""), 10);
+  return numbers[firstDigitIndex] * 10 + numbers[secondDigitIndex];
 };
 
 export const calculateMaxJoltage = (batteryInputs: string[]) => {
