@@ -1,6 +1,17 @@
 type BooleanMatrix = boolean[][];
 type NumberMatrix = number[][];
 
+const directions = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+];
+
 export const createMatrixFromInput = (input: string[]): BooleanMatrix => {
   const maximumLength = Math.max(...input.map((line) => line.length));
   return input.map((line) =>
@@ -22,34 +33,23 @@ export const calculatePaperRollsThatCanBeMoved = (
           return acc;
         }
 
-        let numberOfAdjacentPaperRolls = 0;
-        if (rowIndex > 0) {
-          const previousRow = matrix[rowIndex - 1];
-          if (cellIndex > 0) {
-            numberOfAdjacentPaperRolls += previousRow[cellIndex - 1] ? 1 : 0;
-          }
-          numberOfAdjacentPaperRolls += previousRow[cellIndex] ? 1 : 0;
-          if (cellIndex < row.length - 1) {
-            numberOfAdjacentPaperRolls += previousRow[cellIndex + 1] ? 1 : 0;
-          }
-        }
-        if (cellIndex > 0) {
-          numberOfAdjacentPaperRolls += row[cellIndex - 1] ? 1 : 0;
-        }
-        if (cellIndex < row.length - 1) {
-          numberOfAdjacentPaperRolls += row[cellIndex + 1] ? 1 : 0;
-        }
+        const numberOfAdjacentPaperRolls = directions.reduce<number>(
+          (currentCount, [dx, dy]) => {
+            const newRow = rowIndex + dx;
+            const newCol = cellIndex + dy;
+            if (
+              newRow >= 0 &&
+              newRow < matrix.length &&
+              newCol >= 0 &&
+              newCol < row.length
+            ) {
+              return currentCount + (matrix[newRow][newCol] ? 1 : 0);
+            }
+            return currentCount;
+          },
+          0
+        );
 
-        if (rowIndex < matrix.length - 1) {
-          const nextRow = matrix[rowIndex + 1];
-          if (cellIndex > 0) {
-            numberOfAdjacentPaperRolls += nextRow[cellIndex - 1] ? 1 : 0;
-          }
-          numberOfAdjacentPaperRolls += nextRow[cellIndex] ? 1 : 0;
-          if (cellIndex < row.length - 1) {
-            numberOfAdjacentPaperRolls += nextRow[cellIndex + 1] ? 1 : 0;
-          }
-        }
         if (numberOfAdjacentPaperRolls < 4) {
           return [...acc, cellIndex];
         }
