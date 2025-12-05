@@ -58,3 +58,38 @@ export const calculatePaperRollsThatCanBeMoved = (
     ];
   }, []);
 };
+
+export const applyRollsThatHaveBeenRemoved = (
+  matrix: BooleanMatrix,
+  rollsToRemove: NumberMatrix
+): BooleanMatrix => {
+  return matrix.map((row, rowIndex) => {
+    return row.map((cell, cellIndex) => {
+      if (rollsToRemove[rowIndex].includes(cellIndex)) {
+        return false;
+      }
+      return cell;
+    });
+  });
+};
+
+export const recrusivelyRemovePaperRolls = (
+  matrix: BooleanMatrix,
+  totalRollsRemoved = 0
+): number => {
+  const rollsThatCanBeRemoved = calculatePaperRollsThatCanBeMoved(matrix);
+  const newMatrix = applyRollsThatHaveBeenRemoved(
+    matrix,
+    rollsThatCanBeRemoved
+  );
+  const totalRollsThatCanBeRemoved = rollsThatCanBeRemoved.reduce(
+    (acc, curr) => acc + curr.length,
+    0
+  );
+  const newTotalRollsRemoved = totalRollsRemoved + totalRollsThatCanBeRemoved;
+
+  if (totalRollsThatCanBeRemoved === 0) {
+    return totalRollsRemoved;
+  }
+  return recrusivelyRemovePaperRolls(newMatrix, newTotalRollsRemoved);
+};

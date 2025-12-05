@@ -1,7 +1,9 @@
 import { describe, expect, test } from "vitest";
 import {
+  applyRollsThatHaveBeenRemoved,
   calculatePaperRollsThatCanBeMoved,
   createMatrixFromInput,
+  recrusivelyRemovePaperRolls,
 } from "./day4";
 
 describe("createMatrixFromInput", () => {
@@ -108,5 +110,39 @@ describe("calculatePaperRollsThatCanBeMoved", () => {
       // ignore the last row, we include it so that the previous row can be tested properly
       calculatePaperRollsThatCanBeMoved(matrix).slice(0, -1)
     ).toStrictEqual([[2, 3, 5, 6, 8], [0], [6], []]);
+  });
+});
+
+describe("applyRollsThatHaveBeenRemoved", () => {
+  test("removes rolls from the matrix based on the provided indexes", () => {
+    const matrix = [
+      [true, true, true],
+      [true, true, true],
+      [true, true, true],
+    ];
+    const rollsToRemove = [[0, 2], [1], [0, 1, 2]];
+    expect(applyRollsThatHaveBeenRemoved(matrix, rollsToRemove)).toStrictEqual([
+      [false, true, false],
+      [true, false, true],
+      [false, false, false],
+    ]);
+  });
+});
+
+describe("recrusivelyRemovePaperRolls", () => {
+  test("removes rolls from a complex matrix until no more can be removed", () => {
+    const matrix = createMatrixFromInput([
+      "..@@.@@@@.",
+      "@@@.@.@.@@",
+      "@@@@@.@.@@",
+      "@.@@@@..@.",
+      "@@.@@@@.@@",
+      ".@@@@@@@.@",
+      ".@.@.@.@@@",
+      "@.@@@.@@@@",
+      ".@@@@@@@@.",
+      "@.@.@@@.@.",
+    ]);
+    expect(recrusivelyRemovePaperRolls(matrix)).toBe(43);
   });
 });
