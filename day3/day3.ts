@@ -1,4 +1,4 @@
-const numberOfBatteriesToTurnOn = 2;
+const numberOfBatteriesToTurnOn = 12;
 
 const bases = Array.from(
   { length: numberOfBatteriesToTurnOn },
