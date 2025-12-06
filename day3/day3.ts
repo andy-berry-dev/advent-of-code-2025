@@ -1,12 +1,34 @@
+const numberOfBatteriesToTurnOn = 2;
+
+const bases = Array.from(
+  { length: numberOfBatteriesToTurnOn },
+  (_, i) => 10 ** (numberOfBatteriesToTurnOn - i - 1)
+);
+
 export const findHighestJoltage = (batteryInput: string) => {
-  const numbers = batteryInput.split("").map(Number);
+  const batteries = batteryInput.split("").map(Number);
 
-  const firstDigitIndex = numbers.indexOf(Math.max(...numbers.slice(0, -1)));
-  const secondDigitIndex = numbers.indexOf(
-    Math.max(...numbers.slice(firstDigitIndex + 1))
-  );
+  return bases.reduce(
+    ({ runningCount, currentBatteries }, base, baseIndex) => {
+      const isLastBatteryToChoose = baseIndex === numberOfBatteriesToTurnOn - 1;
+      const batteriesToChooseFrom = isLastBatteryToChoose
+        ? currentBatteries
+        : currentBatteries.slice(0, baseIndex - numberOfBatteriesToTurnOn + 1);
+      const indexOfNextHighest = currentBatteries.indexOf(
+        Math.max(...batteriesToChooseFrom)
+      );
+      const batteryJoltage = currentBatteries[indexOfNextHighest];
 
-  return numbers[firstDigitIndex] * 10 + numbers[secondDigitIndex];
+      return {
+        runningCount: runningCount + batteryJoltage * base,
+        currentBatteries: currentBatteries.slice(indexOfNextHighest + 1),
+      };
+    },
+    {
+      runningCount: 0,
+      currentBatteries: batteries,
+    }
+  ).runningCount;
 };
 
 export const calculateMaxJoltage = (batteryInputs: string[]) => {
